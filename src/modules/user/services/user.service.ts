@@ -12,6 +12,12 @@ export class UserService {
     return this.userRepositories.findAll();
   }
 
+  async createUser(createUserDto: CreateUserDto) {
+    const existingUser = await this.userRepositories.findOne();
+
+    return this.userRepositories.create(createUserDto);
+  }
+
   // findOne(id: number) {
   //   return `This action returns a #${id} te`;
   // }

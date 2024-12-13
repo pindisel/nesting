@@ -21,10 +21,10 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.userService.create(createUserDto);
-  // }
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
+  }
 
   // @Get()
   // findAll() {
