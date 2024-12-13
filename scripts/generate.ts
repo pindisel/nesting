@@ -1,4 +1,5 @@
 import { exec } from "child_process";
+import { camelToOtherCase } from "../src/common/utils/converter";
 
 // Helper function to run shell commands
 const runCommand = (command: string): Promise<string> => {
@@ -23,14 +24,17 @@ if (!moduleName) {
 
 // Main function to automate generation
 const generateModule = async () => {
+  const kebabCase = camelToOtherCase(moduleName, "-");
+
   const commands = [
     `nest g module modules/${moduleName}`,
-    `nest g class models/entities/${moduleName}.entity --flat`,
-    `nest g controller modules/${moduleName}/controllers/${moduleName}.controller --flat`,
-    `nest g class modules/${moduleName}/dto/create-${moduleName}.dto --flat`,
-    `nest g class modules/${moduleName}/dto/update-${moduleName}.dto --flat`,
-    `nest g service modules/${moduleName}/services/${moduleName}.service --flat`,
-    `nest g class modules/${moduleName}/repositories/${moduleName}.repositories --flat`,
+    `nest g class models/entities/${kebabCase}.entity --flat`,
+    `nest g controller modules/${moduleName}/controllers/${kebabCase}.controller --flat`,
+    `nest g class modules/${moduleName}/dto/create-${kebabCase}.dto --flat`,
+    `nest g class modules/${moduleName}/dto/update-${kebabCase}.dto --flat`,
+    `nest g service modules/${moduleName}/services/${kebabCase}.service --flat`,
+    `nest g class modules/${moduleName}/repositories/${kebabCase}.repositories --flat`,
+    `sequelize migration:create --name create-${kebabCase}-table`,
   ];
 
   try {
