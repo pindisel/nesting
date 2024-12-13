@@ -6,12 +6,12 @@ import {
 } from "@nestjs/common";
 import { LoggerMiddleware } from "./shared/middleware/logger.middleware";
 import { DatabaseModule } from "./database/database.module";
-import { UserModule } from './modules/user/user.module';
-import { UserModule } from './modules/user/user.module';
-import { UserModule } from './modules/user/user.module';
+import { UserModule, UserController, UserService } from "./modules";
+
 @Module({
   imports: [DatabaseModule, UserModule],
-  controllers: [],
+  controllers: [UserController],
+  providers: [UserService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
