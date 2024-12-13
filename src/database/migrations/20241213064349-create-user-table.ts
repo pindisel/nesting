@@ -10,7 +10,7 @@ export = {
         unique: true,
         primaryKey: true,
       },
-      fullname: {
+      full_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
