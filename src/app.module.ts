@@ -6,8 +6,11 @@ import {
 } from "@nestjs/common";
 import { LoggerMiddleware } from "./shared/middleware/logger.middleware";
 import { DatabaseModule } from "./database/database.module";
+import { UserModule } from './modules/user/user.module';
+import { UserModule } from './modules/user/user.module';
+import { UserModule } from './modules/user/user.module';
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, UserModule],
   controllers: [],
 })
 export class AppModule implements NestModule {
