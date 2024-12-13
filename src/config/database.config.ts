@@ -1,8 +1,8 @@
 import { Dialect } from "sequelize";
 import { IDatabaseConfig } from "../shared/interfaces/dbConfig.interface";
 import "dotenv/config";
-require("ts-node/register");
-import { User } from "../models";
+require("ts-node").register({ transpileOnly: true });
+import models from "../models";
 
 const config: IDatabaseConfig = {
   development: {
@@ -12,7 +12,7 @@ const config: IDatabaseConfig = {
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
     dialect: (process.env.DB_DIALECT as Dialect) || "postgres",
-    models: [User],
+    models,
   },
   test: {
     username: process.env.DB_USERNAME,
@@ -21,6 +21,7 @@ const config: IDatabaseConfig = {
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
     dialect: (process.env.DB_DIALECT as Dialect) || "postgres",
+    models,
   },
   production: {
     username: process.env.DB_USERNAME,
@@ -29,6 +30,7 @@ const config: IDatabaseConfig = {
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
     dialect: (process.env.DB_DIALECT as Dialect) || "postgres",
+    models,
   },
 };
 
