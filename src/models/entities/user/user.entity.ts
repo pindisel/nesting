@@ -1,11 +1,13 @@
-export class UserEntity {
-  id: number;
-  full_name: string;
+import { Table, Column, Model } from "sequelize-typescript";
+
+@Table
+export class User extends Model {
+  @Column
+  name: string;
+
+  @Column
   email: string;
-  created_at: Date;
-  created_by: string;
-  updated_at: Date;
-  updated_by: string;
-  deleted_at: Date;
-  deleted_by: string;
+
+  @Column
+  password: string;
 }

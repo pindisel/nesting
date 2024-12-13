@@ -10,7 +10,7 @@ export = {
         unique: true,
         primaryKey: true,
       },
-      full_name: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -18,6 +18,10 @@ export = {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       created_at: {
         type: DataTypes.DATE,
