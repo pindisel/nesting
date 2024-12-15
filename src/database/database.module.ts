@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { QueryBuilder } from "./query-builder";
 
@@ -7,9 +7,10 @@ import * as config from "src/config/database.config";
 
 const env = process.env.NODE_ENV || "development";
 
+@Global()
 @Module({
-  providers: [QueryBuilder],
-  exports: [QueryBuilder],
   imports: [SequelizeModule.forRoot(config[env])],
+  providers: [QueryBuilder],
+  exports: [QueryBuilder, SequelizeModule],
 })
 export class DatabaseModule {}
