@@ -16,15 +16,15 @@ import { User } from "src/models";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  getAllUsers(): Promise<User[]> {
-    return this.userService.getAllUsers();
-  }
+  // @Get()
+  // getAllUsers(): Promise<User[]> {
+  //   return this.userService.getAllUsers();
+  // }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
-  }
+  // @Post()
+  // create(@Body() createUserDto: CreateUserDto) {
+  //   return this.userService.createUser(createUserDto);
+  // }
 
   // @Get()
   // findAll() {

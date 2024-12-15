@@ -1,24 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
-import { User } from "src/models";
 import { CreateUserDto } from "../dto/create-user.dto";
+// import { QueryBuilder } from "src/common/utils/query-builder";
+import { QueryTypes } from "sequelize";
 
 @Injectable()
 export class UserRepositories {
-  constructor(
-    @InjectModel(User)
-    private readonly userModel: typeof User,
-  ) {}
-
-  async findAll(): Promise<User[]> {
-    return this.userModel.findAll();
-  }
-
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    return this.userModel.create(createUserDto as any);
-  }
-
-  async findOne(): Promise<User> {
-    return this.userModel.findOne();
-  }
+  // constructor(private queryBuilder: QueryBuilder) {}
+  // async findAll(age: number, limit: number = 10, offset: number = 0) {
+  //   const users = await this.queryBuilder
+  //     .select(["id", "name", "email"])
+  //     .from("users")
+  //     .where({ age: age })
+  //     .orderBy("name", "ASC")
+  //     .limit(limit)
+  //     .offset(offset)
+  //     .execute(QueryTypes.SELECT);
+  //   return users;
+  // }
 }

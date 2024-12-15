@@ -8,15 +8,15 @@ import { User } from "src/models";
 export class UserService {
   constructor(private readonly userRepositories: UserRepositories) {}
 
-  async getAllUsers(): Promise<User[]> {
-    return this.userRepositories.findAll();
-  }
+  // async getAllUsers(): Promise<User[]> {
+  //   return this.userRepositories.findAll(20);
+  // }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const existingUser = await this.userRepositories.findOne();
+  // async createUser(createUserDto: CreateUserDto) {
+  //   const existingUser = await this.userRepositories.findOne();
 
-    return this.userRepositories.create(createUserDto);
-  }
+  //   return this.userRepositories.create(createUserDto);
+  // }
 
   // findOne(id: number) {
   //   return `This action returns a #${id} te`;
