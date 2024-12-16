@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
@@ -17,27 +19,50 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  getAllUsers(): Promise<User[]> {
-    return this.userService.getAllUsers();
+  async getAllUsers(): Promise<User[]> {
+    try {
+      return await this.userService.getAllUsers();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<CreateUserDto> {
-    return this.userService.createUser(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<CreateUserDto> {
+    try {
+      return await this.userService.createUser(createUserDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get(":id")
-  getUserById(@Param("id") id: string): Promise<User> {
-    return this.userService.getUserById(+id);
+  async getUserById(@Param("id") id: string): Promise<User> {
+    try {
+      return await this.userService.getUserById(+id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Patch(":id")
-  updateUser(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUser(+id, updateUserDto);
+  async updateUser(
+    @Param("id") id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    try {
+      return await this.userService.updateUser(+id, updateUserDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete(":id")
-  deleteUser(@Param("id") id: string, @Param("name") name: string) {
-    return this.userService.deleteUser(+id, name);
+  async deleteUser(@Param("id") id: string, @Param("name") name: string) {
+    try {
+      return await this.userService.deleteUser(+id, name);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
