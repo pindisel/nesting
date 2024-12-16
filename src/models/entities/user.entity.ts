@@ -7,7 +7,6 @@ export class User extends Model {
   name: string;
 
   @Column
-  @IsEmail()
   email: string;
 
   @Column
