@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { QueryTypes } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
+import * as dayjs from "dayjs";
+dayjs.locale("id");
 
 @Injectable()
 export class QueryBuilder {
@@ -18,6 +20,7 @@ export class QueryBuilder {
     return this;
   }
 
+  // transaction
   update(table: string, data: Record<string, any>): this {
     const setString = Object.entries(data).map(([key, value]) => {
       this.parameters.push(value);
@@ -45,7 +48,7 @@ export class QueryBuilder {
       }
     });
     if (conditionStrings.length > 0) {
-      this.query += ` WHERE ${conditionStrings.join(" AND ")}`;
+      this.query += ` WHERE deleted_at IS NULL AND ${conditionStrings.join(" AND ")}`;
     }
     return this;
   }
@@ -65,22 +68,38 @@ export class QueryBuilder {
     return this;
   }
 
-  insert(table: string, data: Record<string, any>): this {
+  // transaction
+  insert(
+    table: string,
+    data: Record<string, any>,
+    needReturn: boolean = false,
+  ): this {
     const columns = Object.keys(data).join(", ");
     const values = Object.values(data);
     const placeholders = values.map(() => "?").join(", ");
+    const now = dayjs().format("YYYY-MM-DD HH:mm:ss ZZ");
 
-    this.query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`;
+    this.query = `INSERT INTO "${table}" 
+    (created_at, created_by, updated_at, updated_by, ${columns}) 
+    VALUES 
+    ('${now}', 'system', '${now}', 'system', ${placeholders})`;
     this.parameters = values;
+
+    if (needReturn) this.query += ` RETURNING *`;
+
     return this;
   }
 
   async execute(type: QueryTypes): Promise<any> {
     try {
-      const [results, metadata] = await this.sequelize.query(this.query, {
+      const results = await this.sequelize.query(this.query, {
         replacements: this.parameters,
         type,
       });
+
+      // Reset parameters
+      this.parameters = [];
+
       return results;
     } catch (error) {
       throw new Error(`Error executing query: ${error.message}`);
