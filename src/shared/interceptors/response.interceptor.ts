@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import * as dayjs from "dayjs";
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -21,7 +22,7 @@ export class ResponseInterceptor implements NestInterceptor {
           success: true,
           message: `${method} ${url} success`,
           data,
-          timestamp: new Date().toISOString(),
+          timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
         };
       }),
     );

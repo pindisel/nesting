@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from "@nestjs/common";
+import * as dayjs from "dayjs";
 
 @Catch() // Catch all exceptions
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -21,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       success: false,
       message: exception.message || "Internal Server Error",
       statusCode: status,
-      timestamp: new Date().toISOString(),
+      timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
     });
   }
 }

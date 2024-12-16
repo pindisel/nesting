@@ -3,7 +3,7 @@ import { CreateUserDto } from "../dto/create-user.dto";
 import { QueryTypes } from "sequelize";
 import { QueryBuilder } from "src/database/query-builder";
 import { User } from "src/models";
-import dayjs from "dayjs";
+import * as dayjs from "dayjs";
 
 @Injectable()
 export class UserRepositories {

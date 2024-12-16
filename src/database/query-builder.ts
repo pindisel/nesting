@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { QueryTypes } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
 import * as dayjs from "dayjs";
-dayjs.locale("id");
 
 @Injectable()
 export class QueryBuilder {
