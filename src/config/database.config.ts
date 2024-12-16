@@ -1,37 +1,35 @@
-import { Dialect } from "sequelize";
-import { IDatabaseConfig } from "../shared/interfaces/dbConfig.interface";
-import "dotenv/config";
 require("ts-node").register({ transpileOnly: true });
+import { Dialect } from "sequelize";
 import models from "../models";
+import { IDatabaseConfig } from "../shared/interfaces/dbConfig.interface";
+import { EnvConfig } from "./env.config";
+import { Logger } from "@nestjs/common";
 
-const config: IDatabaseConfig = {
-  development: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    host: process.env.DB_HOST,
-    port: +process.env.DB_PORT,
-    dialect: (process.env.DB_DIALECT as Dialect) || "postgres",
+const envConfig = new EnvConfig();
+
+const createConfig = (): IDatabaseConfig => {
+  const commonConfig = {
+    username: envConfig.get("DB_USERNAME"),
+    password: envConfig.get("DB_PASSWORD"),
+    database: envConfig.get("DB_DATABASE"),
+    host: envConfig.get("DB_HOST"),
+    port: +envConfig.get("DB_PORT"),
+    dialect: (envConfig.get("DB_DIALECT") as Dialect) || "postgres",
     models,
-  },
-  test: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    host: process.env.DB_HOST,
-    port: +process.env.DB_PORT,
-    dialect: (process.env.DB_DIALECT as Dialect) || "postgres",
-    models,
-  },
-  production: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    host: process.env.DB_HOST,
-    port: +process.env.DB_PORT,
-    dialect: (process.env.DB_DIALECT as Dialect) || "postgres",
-    models,
-  },
+  };
+
+  Logger.log(
+    `Connected to database: ${envConfig.get("DB_DATABASE")}`,
+    "DatabaseConfig",
+  );
+
+  return {
+    development: commonConfig,
+    staging: commonConfig,
+    production: commonConfig,
+  };
 };
+
+const config: IDatabaseConfig = createConfig();
 
 export = config;
