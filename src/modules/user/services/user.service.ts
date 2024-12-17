@@ -3,7 +3,8 @@ import { CreateUserDto } from "../dto/create-user.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { UserRepositories } from "../repositories/user.repositories";
 import { User } from "src/models";
-import { GetAllDto, GetByIdDto } from "src/common/dtos/get.dto";
+import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
+import { hash } from "bcryptjs";
 
 @Injectable()
 export class UserService {
@@ -23,7 +24,7 @@ export class UserService {
     return users;
   }
 
-  async getUserById(param: GetByIdDto): Promise<User> {
+  async getUserById(param: IdDto): Promise<User> {
     const { id } = param;
 
     const user = await this.userRepositories.findOne({
@@ -52,12 +53,22 @@ export class UserService {
       );
     }
 
-    await this.userRepositories.create(createUserDto);
+    const password = await hash(createUserDto.password, 10);
+
+    await this.userRepositories.create({
+      ...createUserDto,
+      password,
+    });
 
     return createUserDto;
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(
+    param: IdDto,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateUserDto> {
+    const { id } = param;
+
     const existingUser = await this.userRepositories.findOne({
       id,
     });
@@ -68,12 +79,14 @@ export class UserService {
       );
     }
 
-    const updatedUser = await this.userRepositories.update(id, updateUserDto);
+    await this.userRepositories.update(id, updateUserDto);
 
-    return updatedUser;
+    return updateUserDto;
   }
 
-  async deleteUser(id: number, name: string): Promise<User> {
+  async deleteUser(param: IdDto, name: string) {
+    const { id } = param;
+
     const existingUser = await this.userRepositories.findOne({
       id,
     });
@@ -84,8 +97,8 @@ export class UserService {
       );
     }
 
-    const deletedUser = await this.userRepositories.delete(id, name);
+    await this.userRepositories.delete(id, name);
 
-    return deletedUser;
+    return null;
   }
 }

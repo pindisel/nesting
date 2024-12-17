@@ -12,7 +12,7 @@ import { UserService } from "../services/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { User } from "src/models";
-import { GetAllDto, GetByIdDto } from "src/common/dtos/get.dto";
+import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
 
 @Controller("user")
 export class UserController {
@@ -31,20 +31,21 @@ export class UserController {
   }
 
   @Get(":id")
-  async getUserById(@Param() param: GetByIdDto): Promise<User> {
+  async getUserById(@Param() param: IdDto): Promise<User> {
     return await this.userService.getUserById(param);
   }
 
   @Patch(":id")
   async updateUser(
-    @Param("id") id: string,
+    @Param() param: IdDto,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return await this.userService.updateUser(+id, updateUserDto);
+  ): Promise<UpdateUserDto> {
+    return await this.userService.updateUser(param, updateUserDto);
   }
 
   @Delete(":id")
-  async deleteUser(@Param("id") id: string, @Param("name") name: string) {
-    return await this.userService.deleteUser(+id, name);
+  async deleteUser(@Param() param: IdDto) {
+    const name = "tes";
+    return await this.userService.deleteUser(param, name);
   }
 }

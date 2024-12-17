@@ -24,7 +24,7 @@ export class GetAllDto {
   search?: string = "";
 }
 
-export class GetByIdDto {
+export class IdDto {
   @IsNotEmpty()
   @IsInt()
   id: number;

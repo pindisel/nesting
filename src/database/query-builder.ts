@@ -25,7 +25,7 @@ export class QueryBuilder {
       this.parameters.push(value);
       return `${key} = ?`;
     });
-    this.query = `UPDATE ${table} SET ${setString.join(", ")}`;
+    this.query = `UPDATE "${table}" SET ${setString.join(", ")}`;
     return this;
   }
 
@@ -102,8 +102,6 @@ export class QueryBuilder {
 
   async execute(type: QueryTypes): Promise<any> {
     try {
-      console.log(this.query);
-      console.log(this.parameters);
       const results = await this.sequelize.query(this.query, {
         replacements: this.parameters,
         type,
