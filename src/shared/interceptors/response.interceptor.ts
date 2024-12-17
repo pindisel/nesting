@@ -13,6 +13,7 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const url = context.switchToHttp().getRequest().url;
     const method = context.switchToHttp().getRequest().method;
+    const statusCode = context.switchToHttp().getResponse().statusCode;
 
     return next.handle().pipe(
       // Process successful responses
@@ -20,6 +21,7 @@ export class ResponseInterceptor implements NestInterceptor {
         // Wrap raw data
         return {
           success: true,
+          statusCode,
           message: `${method} ${url} success`,
           data,
           timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),

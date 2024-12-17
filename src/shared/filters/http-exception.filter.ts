@@ -1,13 +1,13 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
 } from "@nestjs/common";
 import * as dayjs from "dayjs";
 
-@Catch() // Catch all exceptions
+@Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -17,11 +17,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // Customize your error response here
+    const message =
+      exception.response?.message || exception.message || "Bad Request";
+
     response.status(status).json({
       success: false,
-      message: exception.message || "Internal Server Error",
       statusCode: status,
+      message,
       timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
     });
   }

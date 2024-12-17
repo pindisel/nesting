@@ -5,20 +5,27 @@ import { QueryBuilder } from "src/database/query-builder";
 import { User } from "src/models";
 import * as dayjs from "dayjs";
 
+const SEARCH_COLUMNS = ["name", "email"];
+
 @Injectable()
 export class UserRepositories {
   constructor(private queryBuilder: QueryBuilder) {}
 
-  async findAll(limit: number = 100, offset: number = 0): Promise<User[]> {
+  async findAll(
+    page: number,
+    limit: number,
+    order: string,
+    sort: "ASC" | "DESC",
+    search: string,
+  ): Promise<User[]> {
     const users = await this.queryBuilder
       .select("*")
       .from("user")
-      .where({
-        name: "name",
-      })
-      .orderBy("name", "ASC")
+      .where({})
+      .search(SEARCH_COLUMNS, search)
+      .orderBy(order, sort)
       .limit(limit)
-      .offset(offset)
+      .offset(page)
       .execute(QueryTypes.SELECT);
     return users;
   }

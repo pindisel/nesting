@@ -6,19 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { User } from "src/models";
+import { GetAllDto, GetByIdDto } from "src/common/dtos/get.dto";
 
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async getAllUsers(): Promise<User[]> {
-    return await this.userService.getAllUsers();
+  async getAllUsers(@Query() query: GetAllDto): Promise<User[]> {
+    return await this.userService.getAllUsers(query);
   }
 
   @Post()
@@ -29,8 +31,8 @@ export class UserController {
   }
 
   @Get(":id")
-  async getUserById(@Param("id") id: string): Promise<User> {
-    return await this.userService.getUserById(+id);
+  async getUserById(@Param() param: GetByIdDto): Promise<User> {
+    return await this.userService.getUserById(param);
   }
 
   @Patch(":id")
