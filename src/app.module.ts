@@ -8,25 +8,20 @@ import { LoggerMiddleware } from "./shared/middleware/logger.middleware";
 import { DatabaseModule } from "./database/database.module";
 import appModule from "./modules";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
-import { ResponseInterceptor } from "./shared/interceptors/response.interceptor";
 import { HttpExceptionFilter } from "./shared/filters/http-exception.filter";
-import { LoggingInterceptor } from "./shared/interceptors/logging.interceptor";
+import { interceptors } from "./shared/interceptors";
 
 @Module({
   imports: [DatabaseModule, ...appModule.modules],
   providers: [
     {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
-    },
-    {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    {
+    ...interceptors.map((interceptor) => ({
       provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
+      useClass: interceptor,
+    })),
   ],
 })
 export class AppModule implements NestModule {

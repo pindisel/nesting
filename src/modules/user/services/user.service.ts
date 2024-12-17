@@ -20,7 +20,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new Error(`Customer not found with id ${id}`);
+      throw new Error(`notFoundUserWithId`);
     }
 
     return user;
@@ -32,9 +32,7 @@ export class UserService {
     });
 
     if (existingUser) {
-      throw new Error(
-        `Customer already exists with email ${createUserDto.email}`,
-      );
+      throw new Error(`foundUserWithEmail`);
     }
 
     await this.userRepositories.create(createUserDto);
@@ -47,7 +45,7 @@ export class UserService {
       id,
     });
     if (!existingUser) {
-      throw new Error(`Customer not found with id ${id}`);
+      throw new Error(`notFoundUserWithId`);
     }
 
     const updatedUser = await this.userRepositories.update(id, updateUserDto);
@@ -60,7 +58,7 @@ export class UserService {
       id,
     });
     if (!existingUser) {
-      throw new Error(`Customer not found with id ${id}`);
+      throw new Error(`notFoundUserWithId`);
     }
 
     const deletedUser = await this.userRepositories.delete(id, name);
