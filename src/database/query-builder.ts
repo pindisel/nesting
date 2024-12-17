@@ -35,6 +35,7 @@ export class QueryBuilder {
   }
 
   where(conditions: Record<string, any>): this {
+    this.query += ` WHERE deleted_at IS NULL`;
     const conditionStrings = Object.entries(conditions).map(([key, value]) => {
       if (value === null) {
         return `${key} IS NULL`;
@@ -47,8 +48,18 @@ export class QueryBuilder {
       }
     });
     if (conditionStrings.length > 0) {
-      this.query += ` WHERE deleted_at IS NULL AND ${conditionStrings.join(" AND ")}`;
+      this.query += ` AND ${conditionStrings.join(" AND ")}`;
     }
+    return this;
+  }
+
+  search(columns: string[], search: string): this {
+    const searchString = `%${search}%`;
+    const searchStrings = columns.map((column) => {
+      this.parameters.push(searchString);
+      return `${column} ILIKE ?`;
+    });
+    this.query += ` AND (${searchStrings.join(" OR ")})`;
     return this;
   }
 
@@ -91,6 +102,8 @@ export class QueryBuilder {
 
   async execute(type: QueryTypes): Promise<any> {
     try {
+      console.log(this.query);
+      console.log(this.parameters);
       const results = await this.sequelize.query(this.query, {
         replacements: this.parameters,
         type,
