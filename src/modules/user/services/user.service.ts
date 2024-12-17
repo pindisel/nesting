@@ -20,7 +20,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new HttpException(`notFoundUserWithId`, HttpStatus.NOT_FOUND);
+      throw new HttpException("notFoundUserWithId", HttpStatus.NOT_FOUND);
     }
 
     return user;
@@ -32,7 +32,7 @@ export class UserService {
     });
 
     if (existingUser) {
-      throw new HttpException(`foundUserWithEmail`, HttpStatus.BAD_REQUEST);
+      throw new HttpException("foundUserWithEmail", HttpStatus.BAD_REQUEST);
     }
 
     await this.userRepositories.create(createUserDto);
@@ -45,7 +45,7 @@ export class UserService {
       id,
     });
     if (!existingUser) {
-      throw new HttpException(`notFoundUserWithId`, HttpStatus.NOT_FOUND);
+      throw new HttpException("notFoundUserWithId", HttpStatus.NOT_FOUND);
     }
 
     const updatedUser = await this.userRepositories.update(id, updateUserDto);
@@ -58,7 +58,7 @@ export class UserService {
       id,
     });
     if (!existingUser) {
-      throw new HttpException(`notFoundUserWithId`, HttpStatus.NOT_FOUND);
+      throw new HttpException("notFoundUserWithId", HttpStatus.NOT_FOUND);
     }
 
     const deletedUser = await this.userRepositories.delete(id, name);
