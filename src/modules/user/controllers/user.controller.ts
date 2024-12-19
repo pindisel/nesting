@@ -14,7 +14,7 @@ import { UpdateUserDto } from "../dto/update-user.dto";
 import { User } from "src/models";
 import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
 
-@Controller("user")
+@Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
