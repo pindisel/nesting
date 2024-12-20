@@ -43,7 +43,7 @@ export class UserRepositories {
 
   async create(data: CreateUserDto): Promise<User> {
     const user = await this.queryBuilder
-      .insert("user", data, false)
+      .insert("user", data)
       .execute(QueryTypes.INSERT);
     return user[0][0];
   }

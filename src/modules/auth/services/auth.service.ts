@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { AuthRepositories } from "../repositories/auth.repositories";
-import { compare, hash } from "bcryptjs";
+import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { LoginDto } from "../dto/auth.dto";
 import { UserRepositories } from "src/modules/user/repositories/user.repositories";

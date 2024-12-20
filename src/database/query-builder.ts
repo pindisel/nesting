@@ -79,11 +79,7 @@ export class QueryBuilder {
   }
 
   // transaction
-  insert(
-    table: string,
-    data: Record<string, any>,
-    needReturn: boolean = false,
-  ): this {
+  insert(table: string, data: Record<string, any>): this {
     const columns = Object.keys(data).join(", ");
     const values = Object.values(data);
     const placeholders = values.map(() => "?").join(", ");
@@ -94,8 +90,6 @@ export class QueryBuilder {
     VALUES 
     ('${now}', 'system', '${now}', 'system', ${placeholders})`;
     this.parameters = values;
-
-    if (needReturn) this.query += ` RETURNING *`;
 
     return this;
   }

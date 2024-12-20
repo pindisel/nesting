@@ -9,7 +9,7 @@ export class AuthRepositories {
 
   async createToken(data: Record<string, any>): Promise<Token> {
     const token = await this.queryBuilder
-      .insert("token", data, false)
+      .insert("token", data)
       .execute(QueryTypes.INSERT);
     return token[0][0];
   }
