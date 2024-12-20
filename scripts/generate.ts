@@ -28,7 +28,7 @@ const generateModule = async () => {
 
   const commands = [
     `nest g module modules/${moduleName}`,
-    `nest g class models/entities/${moduleName}/${kebabCase}.entity --flat`,
+    `nest g class models/entities/${kebabCase}.entity --flat`,
     `nest g controller modules/${moduleName}/controllers/${kebabCase} --flat`,
     `nest g class modules/${moduleName}/dto/create-${kebabCase}.dto --flat`,
     `nest g class modules/${moduleName}/dto/update-${kebabCase}.dto --flat`,

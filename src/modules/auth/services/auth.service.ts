@@ -35,7 +35,7 @@ export class AuthService {
 
     // Create token
     const accessToken = sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
