@@ -30,4 +30,8 @@ export class EnvValidation {
 
   @IsString()
   DB_DIALECT: string;
+
+  // JWT env
+  @IsString()
+  JWT_SECRET: string;
 }

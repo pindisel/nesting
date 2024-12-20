@@ -1,4 +1,3 @@
-import { IsEmail } from "class-validator";
 import { Table, Column, Model } from "sequelize-typescript";
 
 @Table({ tableName: "user", underscored: true })

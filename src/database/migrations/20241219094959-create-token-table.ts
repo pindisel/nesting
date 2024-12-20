@@ -2,7 +2,7 @@ import { QueryInterface, DataTypes } from "sequelize";
 
 export = {
   async up(queryInterface: QueryInterface) {
-    await queryInterface.createTable("user", {
+    await queryInterface.createTable("token", {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -10,15 +10,11 @@ export = {
         unique: true,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING,
+      user_id: {
+        type: DataTypes.INTEGER,
       },
-      email: {
-        type: DataTypes.STRING,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
+      token: {
+        type: DataTypes.TEXT,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -46,6 +42,6 @@ export = {
   },
 
   async down(queryInterface: QueryInterface) {
-    await queryInterface.dropTable("user");
+    await queryInterface.dropTable("token");
   },
 };
