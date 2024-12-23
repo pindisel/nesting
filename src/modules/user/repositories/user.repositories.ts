@@ -27,6 +27,7 @@ export class UserRepositories {
       .limit(limit)
       .offset(page)
       .execute(QueryTypes.SELECT);
+
     return users;
   }
 

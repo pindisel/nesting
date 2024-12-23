@@ -3,8 +3,8 @@ import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from "class-validator";
 export class GetAllDto {
   @IsOptional()
   @IsInt()
-  @Min(1)
-  page?: number = 1;
+  @Min(0)
+  page?: number = 0;
 
   @IsOptional()
   @IsInt()
