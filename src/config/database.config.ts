@@ -1,7 +1,7 @@
 require("ts-node").register({ transpileOnly: true });
 import { Dialect } from "sequelize";
 import models from "../models";
-import { IDatabaseConfig } from "../shared/interfaces/dbConfig.interface";
+import { IDatabaseConfig } from "../shared/interfaces/db-config.interface";
 import { EnvConfig } from "./env.config";
 import { Logger } from "@nestjs/common";
 
@@ -16,7 +16,7 @@ const createConfig = (): IDatabaseConfig => {
     port: +envConfig.get("DB_PORT"),
     dialect: (envConfig.get("DB_DIALECT") as Dialect) || "postgres",
     models,
-    logging: false,
+    logging: true,
   };
 
   Logger.log(
