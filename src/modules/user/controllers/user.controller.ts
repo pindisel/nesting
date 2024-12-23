@@ -7,18 +7,24 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { User } from "src/models";
 import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
+import { RoleGuard } from "src/shared/guards/role.guard";
+import { ModuleName } from "src/common/decorators/auth-module.decorator";
+import { JwtAuthGuard } from "src/shared/guards/jwt.guard";
 
 @Controller("users")
+@UseGuards(JwtAuthGuard, RoleGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @ModuleName("users")
   async getAllUsers(@Query() query: GetAllDto): Promise<User[]> {
     return await this.userService.getAllUsers(query);
   }

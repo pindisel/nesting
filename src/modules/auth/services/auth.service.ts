@@ -1,13 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { AuthRepositories } from "../repositories/auth.repositories";
 import { compare } from "bcryptjs";
-import { sign } from "jsonwebtoken";
 import { LoginDto } from "../dto/auth.dto";
 import { UserRepositories } from "src/modules/user/repositories/user.repositories";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly jwtService: JwtService,
     private readonly authRepositories: AuthRepositories,
     private readonly userRepositories: UserRepositories,
   ) {}
@@ -34,14 +35,13 @@ export class AuthService {
     }
 
     // Create token
-    const accessToken = sign(
-      { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-        algorithm: "HS256",
-      },
-    );
+    const payload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    };
+    const accessToken = this.jwtService.sign(payload);
 
     await this.authRepositories.createToken({
       user_id: user.id,
