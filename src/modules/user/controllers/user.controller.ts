@@ -30,16 +30,19 @@ export class UserController {
   }
 
   @Post()
+  @ModuleName("users")
   async createUser(@Body() body: CreateUserDto): Promise<CreateUserDto> {
     return await this.userService.createUser(body);
   }
 
   @Get(":id")
+  @ModuleName("users")
   async getUserById(@Param() param: IdDto): Promise<User> {
     return await this.userService.getUserById(param);
   }
 
   @Patch(":id")
+  @ModuleName("users")
   async updateUser(
     @Param() param: IdDto,
     @Body() body: UpdateUserDto,
@@ -48,6 +51,7 @@ export class UserController {
   }
 
   @Delete(":id")
+  @ModuleName("users")
   async deleteUser(@Param() param: IdDto) {
     const name = "tes";
     return await this.userService.deleteUser(param, name);
