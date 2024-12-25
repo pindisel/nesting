@@ -7,7 +7,6 @@ import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
 import { JwtAuthGuard } from "src/shared/guards/jwt.guard";
 import { RoleGuard } from "src/shared/guards/role.guard";
 import { User } from "src/models";
-import { ModuleName } from "src/common/decorators/auth-module.decorator";
 import { ModuleRoleRepositories } from "src/modules/module-role/repositories/module-role.repositories";
 import { ModuleRoleService } from "src/modules/module-role/services/module-role.service";
 import { UserRepositories } from "src/modules/user/repositories/user.repositories";
