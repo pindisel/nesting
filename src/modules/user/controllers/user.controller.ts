@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Req,
 } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import { CreateUserDto } from "../dto/create-user.dto";
@@ -31,8 +32,11 @@ export class UserController {
 
   @Post()
   @ModuleName("users")
-  async createUser(@Body() body: CreateUserDto): Promise<CreateUserDto> {
-    return await this.userService.createUser(body);
+  async createUser(
+    @Body() body: CreateUserDto,
+    @Req() { user }: any,
+  ): Promise<CreateUserDto> {
+    return await this.userService.createUser(body, user);
   }
 
   @Get(":id")
@@ -46,14 +50,14 @@ export class UserController {
   async updateUser(
     @Param() param: IdDto,
     @Body() body: UpdateUserDto,
+    @Req() { user }: any,
   ): Promise<UpdateUserDto> {
-    return await this.userService.updateUser(param, body);
+    return await this.userService.updateUser(param, body, user);
   }
 
   @Delete(":id")
   @ModuleName("users")
-  async deleteUser(@Param() param: IdDto) {
-    const name = "tes";
-    return await this.userService.deleteUser(param, name);
+  async deleteUser(@Param() param: IdDto, @Req() { user }: any): Promise<any> {
+    return await this.userService.deleteUser(param, user);
   }
 }

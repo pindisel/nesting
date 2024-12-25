@@ -43,11 +43,6 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(payload);
 
-    await this.authRepositories.createToken({
-      user_id: user.id,
-      token: accessToken,
-    });
-
     return {
       accessToken,
     };

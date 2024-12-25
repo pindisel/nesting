@@ -16,7 +16,7 @@ const createConfig = (): IDatabaseConfig => {
     port: +envConfig.get("DB_PORT"),
     dialect: (envConfig.get("DB_DIALECT") as Dialect) || "postgres",
     models,
-    logging: true,
+    logging: false,
   };
 
   Logger.log(

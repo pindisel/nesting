@@ -7,9 +7,9 @@ import { Token } from "src/models/entities/token.entity";
 export class AuthRepositories {
   constructor(private queryBuilder: QueryBuilder) {}
 
-  async createToken(data: Record<string, any>): Promise<Token> {
+  async createToken(data: Record<string, any>, name: string): Promise<Token> {
     const token = await this.queryBuilder
-      .insert("token", data)
+      .insert("token", data, name)
       .execute(QueryTypes.INSERT);
     return token[0][0];
   }

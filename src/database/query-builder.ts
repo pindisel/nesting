@@ -20,12 +20,18 @@ export class QueryBuilder {
   }
 
   // transaction
-  update(table: string, data: Record<string, any>): this {
+  update(table: string, data: Record<string, any>, name?: string): this {
     const setString = Object.entries(data).map(([key, value]) => {
       this.parameters.push(value);
       return `${key} = ?`;
     });
     this.query = `UPDATE "${table}" SET ${setString.join(", ")}`;
+
+    if (name) {
+      const now = dayjs().format("YYYY-MM-DD HH:mm:ss ZZ");
+      this.query += `, updated_at = '${now}', updated_by = '${name}'`;
+    }
+
     return this;
   }
 
@@ -79,7 +85,7 @@ export class QueryBuilder {
   }
 
   // transaction
-  insert(table: string, data: Record<string, any>): this {
+  insert(table: string, data: Record<string, any>, name: string): this {
     const columns = Object.keys(data).join(", ");
     const values = Object.values(data);
     const placeholders = values.map(() => "?").join(", ");
@@ -88,7 +94,7 @@ export class QueryBuilder {
     this.query = `INSERT INTO "${table}" 
     (created_at, created_by, updated_at, updated_by, ${columns}) 
     VALUES 
-    ('${now}', 'system', '${now}', 'system', ${placeholders})`;
+    ('${now}', '${name}', '${now}', '${name}', ${placeholders})`;
     this.parameters = values;
 
     return this;

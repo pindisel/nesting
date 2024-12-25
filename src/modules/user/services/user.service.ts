@@ -41,7 +41,9 @@ export class UserService {
     return user;
   }
 
-  async createUser(body: CreateUserDto): Promise<CreateUserDto> {
+  async createUser(body: CreateUserDto, profile: any): Promise<CreateUserDto> {
+    const { name } = profile;
+
     const existingUser = await this.userRepositories.findOne({
       email: body.email,
     });
@@ -55,16 +57,24 @@ export class UserService {
 
     const password = await hash(body.password, 10);
 
-    await this.userRepositories.create({
-      ...body,
-      password,
-    });
+    await this.userRepositories.create(
+      {
+        ...body,
+        password,
+      },
+      name,
+    );
 
     return body;
   }
 
-  async updateUser(param: IdDto, body: UpdateUserDto): Promise<UpdateUserDto> {
+  async updateUser(
+    param: IdDto,
+    body: UpdateUserDto,
+    profile: any,
+  ): Promise<UpdateUserDto> {
     const { id } = param;
+    const { name } = profile;
 
     const existingUser = await this.userRepositories.findOne({
       id,
@@ -76,13 +86,20 @@ export class UserService {
       );
     }
 
-    await this.userRepositories.update(id, body);
+    await this.userRepositories.update(
+      id,
+      {
+        ...body,
+      },
+      name,
+    );
 
     return body;
   }
 
-  async deleteUser(param: IdDto, name: string) {
+  async deleteUser(param: IdDto, profile: any) {
     const { id } = param;
+    const { name } = profile;
 
     const existingUser = await this.userRepositories.findOne({
       id,
