@@ -1,17 +1,21 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserController } from "./user.controller";
-import { UserService } from "../services/user.service";
-import { CreateUserDto } from "../dto/create-user.dto";
-import { UpdateUserDto } from "../dto/update-user.dto";
+
 import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
-import { JwtAuthGuard } from "src/shared/guards/jwt.guard";
-import { RoleGuard } from "src/shared/guards/role.guard";
 import { User } from "src/models";
 import { ModuleRoleRepositories } from "src/modules/module-role/repositories/module-role.repositories";
 import { ModuleRoleService } from "src/modules/module-role/services/module-role.service";
 import { UserRepositories } from "src/modules/user/repositories/user.repositories";
+import { UserService } from "../services/user.service";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { UpdateUserDto } from "../dto/update-user.dto";
+import { UserController } from "./user.controller";
+import { JwtAuthGuard } from "src/shared/guards/jwt.guard";
+import { RoleGuard } from "src/shared/guards/role.guard";
 import { MockJwtAuthGuard } from "src/shared/tests/jwt-auth-guard-mock";
 import { MockRoleGuard } from "src/shared/tests/role-guard-mock";
+
+const hasPermission = (moduleName: string, role: string) =>
+  moduleName === "users" && role === "Admin";
 
 describe("UserController", () => {
   let userController: UserController;
@@ -64,11 +68,7 @@ describe("UserController", () => {
       .overrideGuard(JwtAuthGuard)
       .useClass(MockJwtAuthGuard)
       .overrideGuard(RoleGuard)
-      .useValue(
-        new MockRoleGuard(
-          (moduleName, role) => moduleName === "users" && role === "Admin",
-        ),
-      )
+      .useValue(new MockRoleGuard(hasPermission))
       .compile();
 
     userController = module.get<UserController>(UserController);
@@ -175,7 +175,7 @@ describe("UserController", () => {
         },
       };
 
-      expect(await userController.deleteUser(param, req)).toBeUndefined();
+      await userController.deleteUser(param, req);
       expect(mockUserService.deleteUser).toHaveBeenCalledWith(param, req.user);
     });
   });

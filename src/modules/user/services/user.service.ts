@@ -81,7 +81,7 @@ export class UserService {
     });
     if (!existingUser) {
       throw new HttpException(
-        "findUserWithId: Customer not found",
+        "findUserWithId: User not found",
         HttpStatus.NOT_FOUND,
       );
     }
@@ -106,7 +106,7 @@ export class UserService {
     });
     if (!existingUser) {
       throw new HttpException(
-        "findUserWithId: Customer not found",
+        "findUserWithId: User not found",
         HttpStatus.NOT_FOUND,
       );
     }
