@@ -35,7 +35,7 @@ export class UserController {
   async createUser(
     @Body() body: CreateUserDto,
     @Req() { user }: any,
-  ): Promise<CreateUserDto> {
+  ): Promise<User> {
     return await this.userService.createUser(body, user);
   }
 
@@ -51,7 +51,7 @@ export class UserController {
     @Param() param: IdDto,
     @Body() body: UpdateUserDto,
     @Req() { user }: any,
-  ): Promise<UpdateUserDto> {
+  ): Promise<User> {
     return await this.userService.updateUser(param, body, user);
   }
 

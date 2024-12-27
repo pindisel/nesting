@@ -41,7 +41,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(body: CreateUserDto, profile: any): Promise<CreateUserDto> {
+  async createUser(body: CreateUserDto, profile: any): Promise<User> {
     const { name } = profile;
 
     const existingUser = await this.userRepositories.findOne({
@@ -65,14 +65,14 @@ export class UserService {
       name,
     );
 
-    return body;
+    return null;
   }
 
   async updateUser(
     param: IdDto,
     body: UpdateUserDto,
     profile: any,
-  ): Promise<UpdateUserDto> {
+  ): Promise<User> {
     const { id } = param;
     const { name } = profile;
 
@@ -94,7 +94,7 @@ export class UserService {
       name,
     );
 
-    return body;
+    return null;
   }
 
   async deleteUser(param: IdDto, profile: any) {
