@@ -43,20 +43,20 @@ export class UserRepositories {
   }
 
   async create(data: CreateUserDto, name: string): Promise<User> {
-    const user = await this.queryBuilder
+    await this.queryBuilder
       .insert("user", data, name)
       .execute(QueryTypes.INSERT);
-    return user[0][0];
+    return null;
   }
 
   async update(id: number, data: CreateUserDto, name: string): Promise<User> {
-    const user = await this.queryBuilder
+    await this.queryBuilder
       .update("user", data, name)
       .where({
         id,
       })
       .execute(QueryTypes.UPDATE);
-    return user;
+    return null;
   }
 
   async delete(id: number, name: string): Promise<User> {
