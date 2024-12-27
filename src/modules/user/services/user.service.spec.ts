@@ -11,8 +11,15 @@ import * as bcrypt from "bcryptjs";
 jest.mock("bcryptjs");
 
 describe("UserService", () => {
-  let service: UserService;
-  let userRepositories: jest.Mocked<UserRepositories>;
+  let userService: UserService;
+
+  const mockUserRepositories = {
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,72 +27,76 @@ describe("UserService", () => {
         UserService,
         {
           provide: UserRepositories,
-          useValue: {
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            create: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-          },
+          useValue: mockUserRepositories,
         },
       ],
     }).compile();
 
-    service = module.get<UserService>(UserService);
-    userRepositories = module.get<UserRepositories>(
-      UserRepositories,
-    ) as jest.Mocked<UserRepositories>;
+    userService = module.get<UserService>(UserService);
+  });
+
+  it("should be defined", () => {
+    expect(userService).toBeDefined();
   });
 
   describe("getAllUsers", () => {
     it("should return an array of users", async () => {
       const query: GetAllDto = {
-        page: 1,
+        page: 0,
         limit: 10,
-        order: "ASC",
-        sort: "id",
+        order: "id",
+        sort: "ASC",
         search: "",
       };
       const mockUsers: User[] = [
-        { id: 1, email: "test@example.com", password: "hashed" } as User,
+        {
+          id: 1,
+          name: "Test User",
+          email: "user@test.com",
+          password: "password",
+          role: "user",
+        } as User,
       ];
 
-      userRepositories.findAll.mockResolvedValue(mockUsers);
+      mockUserRepositories.findAll.mockResolvedValue(mockUsers);
 
-      const result = await service.getAllUsers(query);
+      const result = await userService.getAllUsers(query);
       expect(result).toEqual(mockUsers);
-      expect(userRepositories.findAll).toHaveBeenCalledWith(
-        1,
-        10,
-        "ASC",
-        "id",
-        "",
+      expect(mockUserRepositories.findAll).toHaveBeenCalledWith(
+        query.page,
+        query.limit,
+        query.order,
+        query.sort,
+        query.search,
       );
     });
   });
 
   describe("getUserById", () => {
+    const param: IdDto = { id: 1 };
     it("should return a user if found", async () => {
-      const param: IdDto = { id: 1 };
       const mockUser: User = {
         id: 1,
-        email: "test@example.com",
-        password: "hashed",
+        name: "Test User",
+        email: "user@test.com",
+        password: "password",
+        role: "user",
       } as User;
 
-      userRepositories.findOne.mockResolvedValue(mockUser);
+      mockUserRepositories.findOne.mockResolvedValue(mockUser);
 
-      const result = await service.getUserById(param);
+      const result = await userService.getUserById(param);
       expect(result).toEqual(mockUser);
-      expect(userRepositories.findOne).toHaveBeenCalledWith({ id: 1 });
+      expect(mockUserRepositories.findOne).toHaveBeenCalledWith({
+        id: param.id,
+      });
     });
 
     it("should throw an exception if user is not found", async () => {
-      const param: IdDto = { id: 1 };
+      mockUserRepositories.findOne.mockResolvedValue(null);
 
-      userRepositories.findOne.mockResolvedValue(null);
-
-      await expect(service.getUserById(param)).rejects.toThrowError(
+      const result = userService.getUserById(param);
+      await expect(result).rejects.toThrow(
         new HttpException(
           "findUserWithId: User not found",
           HttpStatus.NOT_FOUND,
@@ -96,38 +107,44 @@ describe("UserService", () => {
 
   describe("createUser", () => {
     it("should create a new user", async () => {
-      const body: CreateUserDto = {
-        email: "test@example.com",
-        password: "password123",
+      const mockUser: CreateUserDto = {
+        name: "Test User",
+        email: "user@test.com",
+        password: "password",
+        role: "user",
       };
       const profile = { name: "Admin" };
 
-      userRepositories.findOne.mockResolvedValue(null);
+      mockUserRepositories.findOne.mockResolvedValue(null);
       (bcrypt.hash as jest.Mock).mockResolvedValue("hashedPassword");
-      userRepositories.create.mockResolvedValue(body);
+      mockUserRepositories.create.mockResolvedValue(null);
 
-      const result = await service.createUser(body, profile);
+      const result = await userService.createUser(mockUser, profile);
 
-      expect(result).toEqual(body);
-      expect(userRepositories.findOne).toHaveBeenCalledWith({
-        email: "test@example.com",
+      expect(result).toBeNull();
+      expect(mockUserRepositories.findOne).toHaveBeenCalledWith({
+        email: "user@test.com",
       });
-      expect(userRepositories.create).toHaveBeenCalledWith(
-        { ...body, password: "hashedPassword" },
+      expect(mockUserRepositories.create).toHaveBeenCalledWith(
+        { ...mockUser, password: "hashedPassword" },
         "Admin",
       );
     });
 
     it("should throw an exception if user already exists", async () => {
-      const body: CreateUserDto = {
-        email: "test@example.com",
-        password: "password123",
+      const mockUser: CreateUserDto = {
+        name: "Test User",
+        email: "user@test.com",
+        password: "password",
+        role: "user",
       };
       const profile = { name: "Admin" };
 
-      userRepositories.findOne.mockResolvedValue({ id: 1 } as User);
+      mockUserRepositories.findOne.mockResolvedValue(mockUser);
 
-      await expect(service.createUser(body, profile)).rejects.toThrowError(
+      const result = userService.createUser(mockUser, profile);
+
+      await expect(result).rejects.toThrow(
         new HttpException(
           "findUserWithEmail: User already exist",
           HttpStatus.BAD_REQUEST,
@@ -139,30 +156,44 @@ describe("UserService", () => {
   describe("updateUser", () => {
     it("should update an existing user", async () => {
       const param: IdDto = { id: 1 };
-      const body: UpdateUserDto = { email: "new@example.com" };
+      const mockUser: UpdateUserDto = {
+        name: "Updated User",
+        email: "",
+        password: "",
+        role: "",
+      };
       const profile = { name: "Admin" };
 
-      userRepositories.findOne.mockResolvedValue({ id: 1 } as User);
-      userRepositories.update.mockResolvedValue(body);
+      mockUserRepositories.findOne.mockResolvedValue(mockUser);
+      mockUserRepositories.update.mockResolvedValue(null);
 
-      const result = await service.updateUser(param, body, profile);
+      const result = await userService.updateUser(param, mockUser, profile);
 
-      expect(result).toEqual(body);
-      expect(userRepositories.update).toHaveBeenCalledWith(1, body, "Admin");
+      expect(result).toBeNull();
+      expect(mockUserRepositories.update).toHaveBeenCalledWith(
+        1,
+        mockUser,
+        "Admin",
+      );
     });
 
     it("should throw an exception if user is not found", async () => {
       const param: IdDto = { id: 1 };
-      const body: UpdateUserDto = { email: "new@example.com" };
+      const mockUser: UpdateUserDto = {
+        name: "Updated User",
+        email: "",
+        password: "",
+        role: "",
+      };
       const profile = { name: "Admin" };
 
-      userRepositories.findOne.mockResolvedValue(null);
+      mockUserRepositories.findOne.mockResolvedValue(null);
 
       await expect(
-        service.updateUser(param, body, profile),
-      ).rejects.toThrowError(
+        userService.updateUser(param, mockUser, profile),
+      ).rejects.toThrow(
         new HttpException(
-          "findUserWithId: Customer not found",
+          "findUserWithId: User not found",
           HttpStatus.NOT_FOUND,
         ),
       );
@@ -170,28 +201,30 @@ describe("UserService", () => {
   });
 
   describe("deleteUser", () => {
+    const param: IdDto = { id: 1 };
     it("should delete a user", async () => {
-      const param: IdDto = { id: 1 };
       const profile = { name: "Admin" };
 
-      userRepositories.findOne.mockResolvedValue({ id: 1 } as User);
-      userRepositories.delete.mockResolvedValue(null);
+      mockUserRepositories.findOne.mockResolvedValue({ id: 1 } as User);
+      mockUserRepositories.delete.mockResolvedValue(null);
 
-      const result = await service.deleteUser(param, profile);
+      const result = await userService.deleteUser(param, profile);
 
       expect(result).toBeNull();
-      expect(userRepositories.delete).toHaveBeenCalledWith(1, "Admin");
+      expect(mockUserRepositories.delete).toHaveBeenCalledWith(
+        param.id,
+        "Admin",
+      );
     });
 
     it("should throw an exception if user is not found", async () => {
-      const param: IdDto = { id: 1 };
       const profile = { name: "Admin" };
 
-      userRepositories.findOne.mockResolvedValue(null);
+      mockUserRepositories.findOne.mockResolvedValue(null);
 
-      await expect(service.deleteUser(param, profile)).rejects.toThrowError(
+      await expect(userService.deleteUser(param, profile)).rejects.toThrow(
         new HttpException(
-          "findUserWithId: Customer not found",
+          "findUserWithId: User not found",
           HttpStatus.NOT_FOUND,
         ),
       );
