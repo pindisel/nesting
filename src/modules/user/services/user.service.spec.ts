@@ -154,8 +154,8 @@ describe("UserService", () => {
   });
 
   describe("updateUser", () => {
+    const param: IdDto = { id: 1 };
     it("should update an existing user", async () => {
-      const param: IdDto = { id: 1 };
       const mockUser: UpdateUserDto = {
         name: "Updated User",
         email: "",
@@ -178,7 +178,6 @@ describe("UserService", () => {
     });
 
     it("should throw an exception if user is not found", async () => {
-      const param: IdDto = { id: 1 };
       const mockUser: UpdateUserDto = {
         name: "Updated User",
         email: "",
