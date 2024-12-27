@@ -80,7 +80,14 @@ describe("UserController", () => {
 
   describe("getAllUsers", () => {
     it("should return an array of users", async () => {
-      const result: User[] = [
+      const query: GetAllDto = {
+        page: 0,
+        limit: 10,
+        order: "id",
+        sort: "ASC",
+        search: "",
+      };
+      const mockUser: User[] = [
         {
           id: 1,
           name: "Test User",
@@ -89,66 +96,66 @@ describe("UserController", () => {
           role: "user",
         } as User,
       ];
-      mockUserService.getAllUsers.mockResolvedValue(result);
+      mockUserService.getAllUsers.mockResolvedValue(mockUser);
 
-      const query: GetAllDto = {
-        page: 0,
-        limit: 10,
-        order: "id",
-        sort: "ASC",
-        search: "",
-      };
-      expect(await userController.getAllUsers(query)).toEqual(result);
+      const result = await userController.getAllUsers(query);
+      expect(result).toEqual(mockUser);
       expect(mockUserService.getAllUsers).toHaveBeenCalledWith(query);
-    });
-  });
-
-  describe("createUser", () => {
-    it("should create a new user", async () => {
-      const body: CreateUserDto = {
-        name: "Test User",
-        email: "user@test.com",
-        password: "password",
-        role: "user",
-      };
-      mockUserService.createUser.mockResolvedValue(body);
-      const req = {
-        user: {
-          name: "Admin",
-        },
-      };
-
-      expect(await userController.createUser(body, req)).toEqual(body);
-      expect(mockUserService.createUser).toHaveBeenCalledWith(body, req.user);
     });
   });
 
   describe("getUserById", () => {
     it("should return a user by ID", async () => {
-      const result: User = {
+      const param: IdDto = { id: 1 };
+      const mockUser: User = {
         id: 1,
         name: "Test User",
         email: "user@test.com",
         password: "password",
         role: "user",
       } as User;
-      mockUserService.getUserById.mockResolvedValue(result);
 
-      const param: IdDto = { id: 1 };
-      expect(await userController.getUserById(param)).toEqual(result);
+      mockUserService.getUserById.mockResolvedValue(mockUser);
+
+      const result = await userController.getUserById(param);
+      expect(result).toEqual(mockUser);
       expect(mockUserService.getUserById).toHaveBeenCalledWith(param);
+    });
+  });
+
+  describe("createUser", () => {
+    it("should create a new user", async () => {
+      const req = {
+        user: {
+          name: "Admin",
+        },
+      };
+      const mockUser: CreateUserDto = {
+        name: "Test User",
+        email: "user@test.com",
+        password: "password",
+        role: "user",
+      };
+      mockUserService.createUser.mockResolvedValue(mockUser);
+
+      const result = await userController.createUser(mockUser, req);
+      expect(result).toEqual(mockUser);
+      expect(mockUserService.createUser).toHaveBeenCalledWith(
+        mockUser,
+        req.user,
+      );
     });
   });
 
   describe("updateUser", () => {
     it("should update a user", async () => {
-      const body: UpdateUserDto = {
+      const mockUser: UpdateUserDto = {
         name: "Updated User",
         email: "",
         password: "",
         role: "",
       };
-      mockUserService.updateUser.mockResolvedValue(body);
+      mockUserService.updateUser.mockResolvedValue(mockUser);
       const req = {
         user: {
           name: "Admin",
@@ -156,10 +163,12 @@ describe("UserController", () => {
       };
 
       const param: IdDto = { id: 1 };
-      expect(await userController.updateUser(param, body, req)).toEqual(body);
+      expect(await userController.updateUser(param, mockUser, req)).toEqual(
+        mockUser,
+      );
       expect(mockUserService.updateUser).toHaveBeenCalledWith(
         param,
-        body,
+        mockUser,
         req.user,
       );
     });
