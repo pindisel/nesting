@@ -105,21 +105,21 @@ describe("UserController", () => {
 
   describe("createUser", () => {
     it("should create a new user", async () => {
-      const dto: CreateUserDto = {
+      const body: CreateUserDto = {
         name: "Test User",
         email: "user@test.com",
         password: "password",
         role: "user",
       };
-      mockUserService.createUser.mockResolvedValue(dto);
+      mockUserService.createUser.mockResolvedValue(body);
       const req = {
         user: {
           name: "Admin",
         },
       };
 
-      expect(await userController.createUser(dto, req)).toEqual(dto);
-      expect(mockUserService.createUser).toHaveBeenCalledWith(dto, req.user);
+      expect(await userController.createUser(body, req)).toEqual(body);
+      expect(mockUserService.createUser).toHaveBeenCalledWith(body, req.user);
     });
   });
 
@@ -142,13 +142,13 @@ describe("UserController", () => {
 
   describe("updateUser", () => {
     it("should update a user", async () => {
-      const dto: UpdateUserDto = {
+      const body: UpdateUserDto = {
         name: "Updated User",
         email: "",
         password: "",
         role: "",
       };
-      mockUserService.updateUser.mockResolvedValue(dto);
+      mockUserService.updateUser.mockResolvedValue(body);
       const req = {
         user: {
           name: "Admin",
@@ -156,10 +156,10 @@ describe("UserController", () => {
       };
 
       const param: IdDto = { id: 1 };
-      expect(await userController.updateUser(param, dto, req)).toEqual(dto);
+      expect(await userController.updateUser(param, body, req)).toEqual(body);
       expect(mockUserService.updateUser).toHaveBeenCalledWith(
         param,
-        dto,
+        body,
         req.user,
       );
     });
