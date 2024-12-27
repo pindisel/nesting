@@ -4,6 +4,7 @@ import { QueryTypes } from "sequelize";
 import { QueryBuilder } from "src/database/query-builder";
 import { User } from "src/models";
 import * as dayjs from "dayjs";
+import { UpdateUserDto } from "../dto/update-user.dto";
 
 const SEARCH_COLUMNS = ["name", "email"];
 
@@ -49,7 +50,7 @@ export class UserRepositories {
     return null;
   }
 
-  async update(id: number, data: CreateUserDto, name: string): Promise<User> {
+  async update(id: number, data: UpdateUserDto, name: string): Promise<User> {
     await this.queryBuilder
       .update("user", data, name)
       .where({
