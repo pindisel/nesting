@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { AuthRepositories } from "../repositories/auth.repositories";
 import { compare } from "bcryptjs";
 import { LoginDto } from "../dto/auth.dto";
 import { UserRepositories } from "src/modules/user/repositories/user.repositories";
@@ -9,7 +8,6 @@ import { JwtService } from "@nestjs/jwt";
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly authRepositories: AuthRepositories,
     private readonly userRepositories: UserRepositories,
   ) {}
 
