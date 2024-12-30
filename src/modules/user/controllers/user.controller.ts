@@ -18,9 +18,10 @@ import { GetAllDto, IdDto } from "src/common/dtos/common.dto";
 import { RoleGuard } from "src/shared/guards/role.guard";
 import { ModuleName } from "src/common/decorators/auth-module.decorator";
 import { JwtAuthGuard } from "src/shared/guards/jwt.guard";
+import { ThrottlerRateLimitGuard } from "src/shared/guards/throttler.guard";
 
 @Controller("users")
-@UseGuards(JwtAuthGuard, RoleGuard)
+@UseGuards(JwtAuthGuard, RoleGuard, ThrottlerRateLimitGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

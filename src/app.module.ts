@@ -10,10 +10,10 @@ import appModule from "./modules";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { HttpExceptionFilter } from "./shared/filters/http-exception.filter";
 import { interceptors } from "./shared/interceptors";
-import { ModuleRoleModule } from './modules/module-role/module-role.module';
+import { ThrottlerModule } from "@nestjs/throttler";
 
 @Module({
-  imports: [DatabaseModule, ...appModule.modules, ModuleRoleModule],
+  imports: [DatabaseModule, ...appModule.modules, ThrottlerModule.forRoot()],
   providers: [
     {
       provide: APP_FILTER,
