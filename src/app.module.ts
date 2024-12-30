@@ -18,8 +18,9 @@ import { ThrottlerModule } from "@nestjs/throttler";
     ...appModule.modules,
     ThrottlerModule.forRoot([
       {
-        ttl: 60,
+        ttl: 600000,
         limit: 10,
+        blockDuration: 30000,
       },
     ]),
   ],
