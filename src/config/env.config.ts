@@ -17,7 +17,7 @@ export class EnvConfig {
     this.envConfig = env;
   }
 
-  get(key: string): string {
+  get(key: string): any {
     return this.envConfig[key];
   }
 

@@ -11,6 +11,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { HttpExceptionFilter } from "./shared/filters/http-exception.filter";
 import { interceptors } from "./shared/interceptors";
 import { ThrottlerModule } from "@nestjs/throttler";
+import { EnvConfig } from "./config/env.config";
 
 @Module({
   imports: [
@@ -18,9 +19,9 @@ import { ThrottlerModule } from "@nestjs/throttler";
     ...appModule.modules,
     ThrottlerModule.forRoot([
       {
-        ttl: 600000,
-        limit: 10,
-        blockDuration: 30000,
+        ttl: new EnvConfig().get("THROTTLE_TTL"),
+        limit: new EnvConfig().get("THROTTLE_LIMIT"),
+        blockDuration: new EnvConfig().get("THROTTLE_DURATION"),
       },
     ]),
   ],

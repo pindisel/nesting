@@ -34,4 +34,14 @@ export class EnvValidation {
   // JWT env
   @IsString()
   JWT_SECRET: string;
+
+  // Throttler env
+  @IsInt()
+  THROTTLE_TTL: number;
+
+  @IsInt()
+  THROTTLE_LIMIT: number;
+
+  @IsInt()
+  THROTTLE_DURATION: number;
 }
