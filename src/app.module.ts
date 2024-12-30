@@ -13,7 +13,16 @@ import { interceptors } from "./shared/interceptors";
 import { ThrottlerModule } from "@nestjs/throttler";
 
 @Module({
-  imports: [DatabaseModule, ...appModule.modules, ThrottlerModule.forRoot()],
+  imports: [
+    DatabaseModule,
+    ...appModule.modules,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60,
+        limit: 10,
+      },
+    ]),
+  ],
   providers: [
     {
       provide: APP_FILTER,
