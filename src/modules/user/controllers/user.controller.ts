@@ -19,9 +19,11 @@ import { RoleGuard } from "src/shared/guards/role.guard";
 import { ModuleName } from "src/common/decorators/auth-module.decorator";
 import { JwtAuthGuard } from "src/shared/guards/jwt.guard";
 import { ThrottlerRateLimitGuard } from "src/shared/guards/throttler.guard";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 @Controller("users")
 @UseGuards(JwtAuthGuard, RoleGuard, ThrottlerRateLimitGuard)
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
